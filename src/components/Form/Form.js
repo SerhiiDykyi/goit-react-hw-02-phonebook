@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import shortid from 'shortid';
+import './Form.scss';
 
 class Form extends Component {
   state = {
@@ -17,7 +19,8 @@ class Form extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.onAddContact(this.state);
+    const { onAddContact } = this.props;
+    onAddContact(this.state);
     this.reset();
   };
 
@@ -26,48 +29,41 @@ class Form extends Component {
   };
 
   render() {
+    const { name, number } = this.state;
     return (
       <>
-        <h2>Phonebook</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name
+        <form className="form_container" onSubmit={this.handleSubmit}>
+          <p>Name</p>
+          <label htmlFor={this.nameInputId}>
             <input
               type="text"
               name="name"
-              id={this.nameInputId}
-              value={this.state.name}
+              value={name}
               onChange={this.handleChange}
             />
           </label>
-          <label>
-            Number
+          <p>Number</p>
+          <label htmlFor={this.namberInputId}>
             <input
-              type="number"
+              className="form_label"
+              type="tel"
               name="number"
-              id={this.namberInputId}
-              value={this.state.number}
+              value={number}
               onChange={this.handleChange}
             />
           </label>
-          <button type="submit">Add contakt</button>
+          <br />
+          <button className="button" type="submit">
+            Add contakt
+          </button>
         </form>
-        <p>Contacts</p>
-        <ul>
-          {this.props.options.map(({ id, name, number }) => (
-            <li key={id}>
-              <p>
-                {name}: {number}
-              </p>
-              <button onClick={() => this.props.onDeleteContact(id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
       </>
     );
   }
 }
+
+Form.propTypes = {
+  onAddContact: PropTypes.func.isRequired,
+};
 
 export default Form;
